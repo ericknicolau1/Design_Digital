@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual Oficial de Identidade Visual</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Emerald/Sky (Primary: #10B981, Secondary: #38BDF8, Neutrals: Slate, White) -->
+    <!-- Application Structure Plan: A single-page application with a fixed left sidebar (w-64) for non-linear navigation to 13 thematic sections. The main area is scrollable. This structure was chosen because a brand manual is a reference document; the fixed sidebar allows users (designers, developers) to quickly jump between key sections (like "Paleta de Cores" or "Proibições") without scrolling through conceptual text, which is paramount for usability in a reference document. Key identity elements (colors, typography) are presented with dynamic/interactive elements. -->
+    <!-- Visualization & Content Choices: Conceptual sections (1-3) use simple, well-formatted text blocks. Core identity (6-9) uses interactive Color Swatches (JS copy HEX), visual placeholders for Logo/Variations, and styled typography examples. Application/Prohibitions (10-11) use visual grid layouts with placeholder images and JS toggles for prohibition examples. Protótipo (12) uses a responsive grid for mockup/print display. NO SVG/Mermaid are used. All visuals are placeholders (placehold.co) or stylized HTML/CSS. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        * {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(to bottom, #f8fafc 0%, #e2e8f0 100%);
+            color: #1e293b;
+        }
+        
+        /* Sidebar moderna com glassmorphism */
+        .sidebar-link {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .sidebar-link::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background: linear-gradient(to bottom, #10b981, #34d399);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .sidebar-link:hover {
+            background-color: #f0fdf4;
+            transform: translateX(4px);
+            padding-left: 1rem;
+        }
+        
+        .sidebar-link.active {
+            background: linear-gradient(to right, #ecfdf5, #d1fae5);
+            color: #065f46;
+            font-weight: 600;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.15);
+        }
+        
+        .sidebar-link.active::before {
+            transform: scaleY(1);
+        }
+        
+        /* Títulos de seção modernos */
+        .section-title {
+            font-weight: 800;
+            color: #0f172a;
+            border-left: 6px solid transparent;
+            border-image: linear-gradient(to bottom, #10b981, #34d399) 1;
+            position: relative;
+            padding-left: 1.5rem;
+            animation: fadeInLeft 0.6s ease;
+        }
+        
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        /* Color swatches com efeito moderno */
+        .color-swatch {
+            position: relative;
+            border-radius: 1rem;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .color-swatch:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        .color-swatch-hex {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            opacity: 0;
+            transform: translateY(100%);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.7));
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 0.5rem;
+            text-align: center;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            z-index: 10;
+        }
+        
+        .color-swatch:hover .color-swatch-hex {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Full Height Layout */
+        .manual-main-content {
+            min-height: 100vh;
+        }
+
+        /* Capa moderna com animação */
+        #capa {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #059669 0%, #10b981 25%, #34d399 50%, #6ee7b7 75%, #ecfdf5 100%);
+            background-size: 200% 200%;
+            animation: gradientShift 15s ease infinite;
+            color: white;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        #capa::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+            animation: float 20s ease-in-out infinite;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(30px, -30px); }
+        }
+        
+        /* Cards modernos com glassmorphism */
+        .modern-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .modern-card:hover {
+            background: rgba(255, 255, 255, 0.95);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Botões modernos */
+        .modern-button {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .modern-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .modern-button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        /* Animação de fade in para seções */
+        section {
+            animation: fadeIn 0.8s ease;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Scrollbar personalizada */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, #10b981, #34d399);
+            border-radius: 5px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(to bottom, #059669, #10b981);
+        }
+        
+        /* Logo container com efeito */
+        .logo-container {
+            position: relative;
+            transition: all 0.4s ease;
+        }
+        
+        .logo-container::after {
+            content: '';
+            position: absolute;
+            inset: -10px;
+            background: linear-gradient(45deg, #10b981, #34d399, #6ee7b7, #34d399, #10b981);
+            background-size: 300% 300%;
+            border-radius: 1.5rem;
+            z-index: -1;
+            animation: gradientRotate 3s ease infinite;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        
+        .logo-container:hover::after {
+            opacity: 0.6;
+        }
+        
+        @keyframes gradientRotate {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        /* Melhor contraste no card de créditos da capa */
+        .credits-card {
+            transition: all 0.3s ease;
+        }
+        
+        .credits-card:hover {
+            background: rgba(255, 255, 255, 0.95) !important;
+        }
+        
+        .credits-card:hover * {
+            color: #0f172a !important;
+            text-shadow: none !important;
+        }
+    </style>
+</head>
+<body class="lg:flex">
+
+    <!-- Sidebar de Navegação Fixa -->
+    <aside class="hidden lg:block lg:w-64 xl:w-72 bg-white/90 backdrop-blur-md border-r border-slate-200/60 fixed h-full p-6 overflow-y-auto shadow-xl">
+        <h1 class="text-2xl font-black bg-gradient-to-r from-emerald-600 to-emerald-400 bg-clip-text text-transparent mb-8">MANUAL VISUAL</h1>
+        <nav class="space-y-1">
+            <h3 class="text-xs font-semibold uppercase text-slate-400 mb-2 tracking-wider">Estrutura</h3>
+            <a href="#capa" class="sidebar-link block px-3 py-2 rounded-md active" data-section="capa">Capa</a>
+            <a href="#introducao" class="sidebar-link block px-3 py-2 rounded-md" data-section="introducao">1. Introdução</a>
+            <a href="#sobre" class="sidebar-link block px-3 py-2 rounded-md" data-section="sobre">2. Sobre a Marca</a>
+            <a href="#proposito" class="sidebar-link block px-3 py-2 rounded-md" data-section="proposito">3. Motivações e Propósito</a>
+            <a href="#slogan" class="sidebar-link block px-3 py-2 rounded-md" data-section="slogan">4. Slogan</a>
+            <a href="#processo" class="sidebar-link block px-3 py-2 rounded-md" data-section="processo">5. Processo Criativo</a>
+            <a href="#logo-final" class="sidebar-link block px-3 py-2 rounded-md" data-section="logo-final">6. Logotipo Final</a>
+            <a href="#variacoes" class="sidebar-link block px-3 py-2 rounded-md" data-section="variacoes">7. Variações do Logotipo</a>
+            <a href="#cores" class="sidebar-link block px-3 py-2 rounded-md" data-section="cores">8. Paleta de Cores</a>
+            <a href="#tipografia" class="sidebar-link block px-3 py-2 rounded-md" data-section="tipografia">9. Tipografia</a>
+            <a href="#aplicacoes" class="sidebar-link block px-3 py-2 rounded-md" data-section="aplicacoes">10. Aplicações da Marca</a>
+            <a href="#proibicoes" class="sidebar-link block px-3 py-2 rounded-md" data-section="proibicoes">11. Proibições de Uso</a>
+            <a href="#prototipo" class="sidebar-link block px-3 py-2 rounded-md" data-section="prototipo">12. Protótipo / Prints</a>
+            <a href="#creditos" class="sidebar-link block px-3 py-2 rounded-md" data-section="creditos">13. Créditos do Grupo</a>
+        </nav>
+    </aside>
+
+    <!-- Conteúdo Principal -->
+    <main class="lg:ml-64 xl:ml-72 flex-1 manual-main-content">
+        <div class="max-w-7xl mx-auto">
+            
+            <!-- CAPA -->
+            <section id="capa" class="w-full">
+                <div class="text-center relative z-10">
+                    <h1 class="text-6xl sm:text-7xl lg:text-8xl font-black mb-6 animate-pulse">MANUAL OFICIAL</h1>
+                    <h2 class="text-2xl sm:text-3xl lg:text-4xl font-light mb-12 tracking-wide">IDENTIDADE VISUAL DO SITE</h2>
+                    
+                    <div class="w-48 h-48 sm:w-64 sm:h-64 mx-auto bg-white/95 backdrop-blur-lg rounded-2xl shadow-2xl p-6 flex items-center justify-center mb-10 logo-container">
+                        <span class="text-4xl sm:text-5xl font-bold bg-gradient-to-br from-emerald-600 to-emerald-400 bg-clip-text text-transparent">Logo Final</span>
+                    </div>
+
+                    <p class="text-3xl sm:text-4xl lg:text-5xl font-light italic mb-3 drop-shadow-lg">"[Slogan da Marca vai aqui]"</p>
+                    <p class="text-xl sm:text-2xl font-bold mb-10 tracking-wider">Site: [NOME DO SITE]</p>
+
+                    <div class="credits-card mt-20 p-8 bg-white/20 backdrop-blur-lg rounded-2xl max-w-2xl mx-auto border border-white/30 shadow-2xl modern-card">
+                        <h3 class="text-2xl font-semibold mb-6 tracking-wide">Desenvolvido por:</h3>
+                        <p class="text-lg mb-2">Integrante 1 | Integrante 2 | Integrante 3</p>
+                        <p class="text-lg mt-6 mb-2">Disciplina: [Nome da Disciplina] / Professor: [Nome do Professor]</p>
+                        <p class="text-lg">Curso: [Nome do Curso] | Data: [05 de Novembro de 2025]</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SUMÁRIO (Opcional - Visual) -->
+            <section id="sumario" class="p-8 sm:p-12 lg:p-16 bg-gradient-to-br from-slate-50 to-slate-100 border-b border-slate-200">
+                <h2 class="text-3xl font-black text-slate-800 mb-8">Sumário Visual</h2>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <a href="#introducao" class="bg-white/80 backdrop-blur-sm p-5 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-slate-100">1. Introdução</a>
+                    <a href="#sobre" class="bg-white/80 backdrop-blur-sm p-5 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-slate-100">2. Sobre a Marca</a>
+                    <a href="#proposito" class="bg-white/80 backdrop-blur-sm p-5 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-slate-100">3. Motivações</a>
+                    <a href="#slogan" class="bg-white/80 backdrop-blur-sm p-5 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-slate-100">4. Slogan</a>
+                    <a href="#processo" class="bg-white/80 backdrop-blur-sm p-5 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-slate-100">5. Processo Criativo</a>
+                    <a href="#logo-final" class="bg-white/80 backdrop-blur-sm p-5 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-slate-100">6. Logotipo Final</a>
+                    <a href="#variacoes" class="bg-white/80 backdrop-blur-sm p-5 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-slate-100">7. Variações do Logo</a>
+                    <a href="#cores" class="bg-white/80 backdrop-blur-sm p-5 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-slate-100">8. Paleta de Cores</a>
+                    <a href="#tipografia" class="bg-white/80 backdrop-blur-sm p-5 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-slate-100">9. Tipografia</a>
+                    <a href="#aplicacoes" class="bg-white/80 backdrop-blur-sm p-5 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-slate-100">10. Aplicações</a>
+                    <a href="#proibicoes" class="bg-white/80 backdrop-blur-sm p-5 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-slate-100">11. Proibições</a>
+                    <a href="#prototipo" class="bg-white/80 backdrop-blur-sm p-5 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-slate-100">12. Protótipo / Prints</a>
+                    <a href="#creditos" class="bg-white/80 backdrop-blur-sm p-5 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-slate-100">13. Créditos</a>
+                </div>
+            </section>
+
+            <!-- 1. Introdução -->
+            <section id="introducao" class="p-8 sm:p-12 lg:p-16">
+                <h2 class="text-4xl section-title pl-4 mb-8">1. Introdução</h2>
+                <p class="text-xl text-slate-600 mb-4">Este manual apresenta a identidade visual completa do site **[Nome do Site: EcoConnect]**. Ele registra o conceito, o processo criativo e as diretrizes de uso da marca, garantindo consistência visual em todo o projeto Web. Este documento é o guia oficial para todos os desenvolvedores e designers envolvidos no projeto.</p>
+                <div class="mt-8 p-4 bg-emerald-50 border border-emerald-200 rounded-lg text-emerald-800 font-medium">
+                    <p class="text-sm">Observação: Este material é criativo, visual e não segue padrões ABNT.</p>
+                </div>
+            </section>
+
+            <!-- 2. Sobre a Marca -->
+            <section id="sobre" class="p-8 sm:p-12 lg:p-16 bg-slate-50">
+                <h2 class="text-4xl section-title pl-4 mb-8">2. Sobre a Marca</h2>
+                <div class="grid md:grid-cols-2 gap-12">
+                    <div>
+                        <h3 class="text-2xl font-semibold text-slate-700 mb-4">O que é o site e o que ele oferece?</h3>
+                        <p class="text-lg text-slate-600">O site **[Nome do Site]** é uma plataforma inovadora focada em [descreva o nicho, ex: sustentabilidade e notícias ambientais]. Oferecemos [lista o que o site fornece, ex: artigos diários, calculadora de pegada de carbono e fóruns de discussão].</p>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-semibold text-slate-700 mb-4">Público-alvo e Posicionamento</h3>
+                        <p class="text-lg text-slate-600 mb-4">Nosso público-alvo principal são [descreva o público, ex: jovens adultos (18-35 anos) interessados em consumo consciente e ativismo social].</p>
+                        <p class="text-lg text-slate-600">**Posicionamento:** Somos reconhecidos como a [defina o posicionamento, ex: fonte mais confiável e acessível de informações sobre práticas ecológicas no dia a dia].</p>
+                    </div>
+                    <div class="md:col-span-2">
+                        <h3 class="text-2xl font-semibold text-slate-700 mb-4">Problema que Resolvemos</h3>
+                        <p class="text-lg text-slate-600">Resolvemos o problema da [descreva o problema, ex: desinformação e dificuldade em encontrar orientações práticas para um estilo de vida sustentável] oferecendo conteúdo filtrado e ferramentas interativas.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. Motivações e Propósito do Site -->
+            <section id="proposito" class="p-8 sm:p-12 lg:p-16">
+                <h2 class="text-4xl section-title pl-4 mb-8">3. Motivações e Propósito do Site</h2>
+                <div class="grid md:grid-cols-3 gap-8 text-center">
+                    <div class="p-8 bg-gradient-to-br from-white to-emerald-50 rounded-2xl shadow-xl border border-emerald-100 modern-card group">
+                        <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-full flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-300">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-emerald-700 mb-3">Benefício do Usuário</h3>
+                        <p class="text-slate-600 leading-relaxed">Permitir que o usuário tome decisões informadas e se sinta parte de uma comunidade global engajada.</p>
+                    </div>
+                    <div class="p-8 bg-gradient-to-br from-white to-sky-50 rounded-2xl shadow-xl border border-sky-100 modern-card group">
+                        <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-sky-500 to-sky-600 rounded-full flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-300">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-sky-700 mb-3">Dor Atendida</h3>
+                        <p class="text-slate-600 leading-relaxed">Aliviar a sensação de impotência frente a crises ambientais, oferecendo ações concretas.</p>
+                    </div>
+                    <div class="p-8 bg-gradient-to-br from-white to-violet-50 rounded-2xl shadow-xl border border-violet-100 modern-card group">
+                        <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-violet-500 to-violet-600 rounded-full flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-300">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-violet-700 mb-3">Diferencial Proposto</h3>
+                        <p class="text-slate-600 leading-relaxed">Nosso projeto propõe um diferencial de [mencione o diferencial, ex: conteúdo altamente visual e gamificado para engajamento].</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. Slogan -->
+            <section id="slogan" class="p-8 sm:p-12 lg:p-16 bg-gradient-to-br from-slate-50 via-emerald-50 to-slate-50 text-center relative overflow-hidden">
+                <div class="absolute inset-0 opacity-10">
+                    <div class="absolute top-10 left-10 w-72 h-72 bg-emerald-300 rounded-full blur-3xl"></div>
+                    <div class="absolute bottom-10 right-10 w-96 h-96 bg-sky-300 rounded-full blur-3xl"></div>
+                </div>
+                <div class="relative z-10">
+                    <h2 class="text-4xl section-title pl-4 mx-auto mb-12 inline-block">4. Slogan</h2>
+                    <p class="text-3xl sm:text-4xl lg:text-6xl font-extrabold bg-gradient-to-r from-emerald-700 via-emerald-500 to-emerald-700 bg-clip-text text-transparent italic leading-tight mb-6">
+                        "Conectando você a um futuro sustentável."
+                    </p>
+                    <p class="mt-6 text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">Um slogan curto, marcante e diretamente relacionado ao propósito da marca. Ele comunica nossa missão de forma clara e inspiradora.</p>
+                </div>
+            </section>
+
+            <!-- 5. Processo Criativo -->
+            <section id="processo" class="p-8 sm:p-12 lg:p-16">
+                <h2 class="text-4xl section-title pl-4 mb-8">5. Processo Criativo</h2>
+                <p class="text-xl text-slate-600 mb-8">O processo criativo foi uma jornada de experimentação, descarte e refinamento. O objetivo era casar o conceito de [conceito 1] com a ideia de [conceito 2] de forma simples e memorável.</p>
+
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="md:col-span-1">
+                        <h3 class="text-2xl font-semibold text-emerald-700 mb-4">Rascunhos e Experimentações</h3>
+                        <p class="text-slate-600 mb-4">Registros das primeiras ideias no papel, incluindo estudos de formas, ícones e composições descartadas. Foram testadas formas circulares, lineares e orgânicas.</p>
+                        <img src="https://placehold.co/350x300/e0f2fe/0c4a6e?text=Foto+Rascunhos" alt="Foto de rascunhos no papel" class="rounded-lg shadow-md w-full h-auto mt-4">
+                    </div>
+                    <div class="md:col-span-1">
+                        <h3 class="text-2xl font-semibold text-emerald-700 mb-4">Primeiras Versões do Logo</h3>
+                        <p class="text-slate-600 mb-4">Variações iniciais do logo, testes de cor e tipografia. Versões com [elemento A] foram descartadas por serem muito complexas, focando na simplicidade.</p>
+                        <div class="grid grid-cols-2 gap-2 mt-4">
+                            <img src="https://placehold.co/150x150/d1fae5/065f46?text=V01" alt="Primeira Versão do Logo" class="rounded-lg">
+                            <img src="https://placehold.co/150x150/d1fae5/065f46?text=V02" alt="Segunda Versão do Logo" class="rounded-lg">
+                        </div>
+                    </div>
+                    <div class="md:col-span-1">
+                        <h3 class="text-2xl font-semibold text-emerald-700 mb-4">Justificativas da Escolha</h3>
+                        <p class="text-slate-600 mb-4">**Forma:** As formas [descreva as formas] representam [significado].</p>
+                        <p class="text-slate-600 mb-4">**Paleta:** A paleta foi escolhida para transmitir [mensagem, ex: crescimento, confiança e calma].</p>
+                        <p class="text-slate-600">**Importante:** O logo final é uma criação própria baseada em referências visuais, não gerado integralmente por IA.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. Logotipo Final -->
+            <section id="logo-final" class="p-8 sm:p-12 lg:p-16 bg-slate-50">
+                <h2 class="text-4xl section-title pl-4 mb-8">6. Logotipo Final</h2>
+                <div class="grid md:grid-cols-3 gap-12">
+                    <div class="md:col-span-2 p-8 bg-white rounded-xl shadow-xl flex items-center justify-center">
+                        <div class="text-center">
+                            <div class="mb-6 w-56 h-56 mx-auto bg-slate-100 flex items-center justify-center">
+                                <span class="text-3xl font-bold text-emerald-600">Logo Principal</span>
+                            </div>
+                            <p class="text-xl font-bold text-slate-800">O que o logo comunica e como representa o site.</p>
+                            <p class="text-slate-600 mt-2">O nosso logotipo combina [elemento A] e [elemento B] para simbolizar [o conceito principal].</p>
+                        </div>
+                    </div>
+                    <div class="md:col-span-1 space-y-6">
+                        <h3 class="text-2xl font-semibold text-slate-700 mb-4">Especificações</h3>
+                        <div class="p-4 bg-slate-100 rounded-lg">
+                            <p class="font-bold">Versão Limpa (Sem Fundo)</p>
+                            <img src="https://placehold.co/100x100/ffffff/10b981?text=Logo" alt="Logo Sem Fundo" class="mt-2 border border-slate-300">
+                        </div>
+                        <div class="p-4 bg-slate-100 rounded-lg">
+                            <p class="font-bold">Grade de Construção</p>
+                            <img src="https://placehold.co/100x100/ffffff/1e293b?text=Grid" alt="Grade de Construção" class="mt-2 border border-slate-300">
+                        </div>
+                        <div class="p-4 bg-slate-100 rounded-lg">
+                            <p class="font-bold">Margem de Segurança (X)</p>
+                            <img src="https://placehold.co/100x100/ffffff/1e293b?text=Margem" alt="Margem de Segurança" class="mt-2 border border-slate-300">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 7. Variações do Logotipo -->
+            <section id="variacoes" class="p-8 sm:p-12 lg:p-16">
+                <h2 class="text-4xl section-title pl-4 mb-8">7. Variações do Logotipo</h2>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+                    <div class="p-4 border rounded-lg bg-emerald-50">
+                        <p class="font-semibold text-sm mb-2">Colorido</p>
+                        <img src="https://placehold.co/100x60/10b981/ffffff?text=Color" alt="Logo Colorido" class="mx-auto">
+                    </div>
+                    <div class="p-4 border rounded-lg bg-white">
+                        <p class="font-semibold text-sm mb-2">Monocromático</p>
+                        <img src="https://placehold.co/100x60/ffffff/1e293b?text=Mono" alt="Logo Monocromático" class="mx-auto">
+                    </div>
+                    <div class="p-4 border rounded-lg bg-slate-800">
+                        <p class="font-semibold text-sm mb-2 text-white">Negativo</p>
+                        <img src="https://placehold.co/100x60/0f172a/ffffff?text=Negativo" alt="Logo Negativo" class="mx-auto">
+                    </div>
+                    <div class="p-4 border rounded-lg bg-white">
+                        <p class="font-semibold text-sm mb-2">Ícone Reduzido</p>
+                        <img src="https://placehold.co/60x60/10b981/ffffff?text=Fav" alt="Ícone Reduzido" class="mx-auto">
+                    </div>
+                </div>
+
+                <h3 class="text-2xl font-semibold text-slate-700 mt-10 mb-4">Versões Alternativas</h3>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="p-4 border rounded-lg bg-slate-100">
+                        <p class="font-semibold mb-2">Horizontal</p>
+                        <img src="https://placehold.co/300x50/10b981/ffffff?text=Logo+Horizontal" alt="Versão Horizontal">
+                    </div>
+                    <div class="p-4 border rounded-lg bg-slate-100">
+                        <p class="font-semibold mb-2">Vertical</p>
+                        <img src="https://placehold.co/150x100/10b981/ffffff?text=Logo+Vertical" alt="Versão Vertical">
+                    </div>
+                </div>
+            </section>
+
+            <!-- 8. Paleta de Cores Oficial -->
+            <section id="cores" class="p-8 sm:p-12 lg:p-16 bg-slate-50">
+                <h2 class="text-4xl section-title pl-4 mb-8">8. Paleta de Cores Oficial</h2>
+                <p class="text-xl text-slate-600 mb-8">A paleta de cores foi definida para evocar [personalidade das cores, ex: tranquilidade, inovação e confiança]. Clique nos blocos para copiar o código HEX.</p>
+
+                <div class="space-y-8">
+                    <h3 class="text-2xl font-semibold text-emerald-700">Cores Primárias</h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-6">
+                        <!-- Cor Primária 1 -->
+                        <div class="color-swatch relative overflow-hidden rounded-xl shadow-lg cursor-pointer" data-hex="#10B981" style="background-color: #10B981;">
+                            <div class="h-32 flex items-center justify-center text-white font-bold text-xl">Esmeralda</div>
+                            <div class="color-swatch-hex" onclick="copyHex(this)">#10B981</div>
+                        </div>
+                        <!-- Cor Primária 2 -->
+                        <div class="color-swatch relative overflow-hidden rounded-xl shadow-lg cursor-pointer" data-hex="#38BDF8" style="background-color: #38BDF8;">
+                            <div class="h-32 flex items-center justify-center text-white font-bold text-xl">Céu Claro</div>
+                            <div class="color-swatch-hex" onclick="copyHex(this)">#38BDF8</div>
+                        </div>
+                    </div>
+
+                    <h3 class="text-2xl font-semibold text-emerald-700">Cores Secundárias</h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-6">
+                        <!-- Cor Secundária 1 -->
+                        <div class="color-swatch relative overflow-hidden rounded-xl shadow-lg cursor-pointer" data-hex="#FACC15" style="background-color: #FACC15;">
+                            <div class="h-32 flex items-center justify-center text-slate-800 font-bold text-xl">Destaque</div>
+                            <div class="color-swatch-hex" onclick="copyHex(this)">#FACC15</div>
+                        </div>
+                        <!-- Cor Secundária 2 -->
+                        <div class="color-swatch relative overflow-hidden rounded-xl shadow-lg cursor-pointer" data-hex="#F472B6" style="background-color: #F472B6;">
+                            <div class="h-32 flex items-center justify-center text-white font-bold text-xl">Ação</div>
+                            <div class="color-swatch-hex" onclick="copyHex(this)">#F472B6</div>
+                        </div>
+                    </div>
+
+                    <h3 class="text-2xl font-semibold text-emerald-700">Cores Neutras</h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-6">
+                        <!-- Branco -->
+                        <div class="color-swatch relative overflow-hidden rounded-xl shadow-lg cursor-pointer border border-slate-300" data-hex="#FFFFFF" style="background-color: #FFFFFF;">
+                            <div class="h-32 flex items-center justify-center text-slate-800 font-bold text-xl">Branco</div>
+                            <div class="color-swatch-hex" onclick="copyHex(this)" style="background-color: rgba(0, 0, 0, 0.5);">#FFFFFF</div>
+                        </div>
+                        <!-- Preto -->
+                        <div class="color-swatch relative overflow-hidden rounded-xl shadow-lg cursor-pointer" data-hex="#0F172A" style="background-color: #0F172A;">
+                            <div class="h-32 flex items-center justify-center text-white font-bold text-xl">Preto</div>
+                            <div class="color-swatch-hex" onclick="copyHex(this)">#0F172A</div>
+                        </div>
+                        <!-- Cinza -->
+                        <div class="color-swatch relative overflow-hidden rounded-xl shadow-lg cursor-pointer" data-hex="#64748B" style="background-color: #64748B;">
+                            <div class="h-32 flex items-center justify-center text-white font-bold text-xl">Cinza Base</div>
+                            <div class="color-swatch-hex" onclick="copyHex(this)">#64748B</div>
+                        </div>
+                    </div>
+                </div>
+                <div id="copy-message" class="fixed bottom-4 right-4 bg-slate-800 text-white px-4 py-2 rounded-lg shadow-xl opacity-0 transition-opacity duration-300">Copiado!</div>
+            </section>
+
+            <!-- 9. Tipografia -->
+            <section id="tipografia" class="p-8 sm:p-12 lg:p-16">
+                <h2 class="text-4xl section-title pl-4 mb-8">9. Tipografia</h2>
+                <p class="text-xl text-slate-600 mb-8">Utilizamos o máximo de 2 fontes para garantir a leveza e a consistência da marca. A fonte principal é robusta para títulos, enquanto a fonte de corpo é altamente legível.</p>
+
+                <div class="grid md:grid-cols-2 gap-10">
+                    <div>
+                        <h3 class="text-2xl font-semibold text-emerald-700 mb-4">Fonte de Títulos (H1, H2...)</h3>
+                        <p class="text-xs text-slate-500 mb-2">Nome da Fonte: Inter (Bold / ExtraBold)</p>
+                        <p class="text-5xl font-extrabold text-slate-800 mb-4">Headline Principal</p>
+                        <p class="text-2xl font-bold text-slate-700 mb-4">Subtítulo Importante</p>
+                        <p class="text-slate-600">**Justificativa:** Escolhida por sua força e modernidade, garantindo impacto visual nos títulos principais.</p>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-semibold text-emerald-700 mb-4">Fonte dos Textos (Corpo)</h3>
+                        <p class="text-xs text-slate-500 mb-2">Nome da Fonte: Inter (Regular)</p>
+                        <p class="text-lg text-slate-700 leading-relaxed mb-2">Este é o corpo principal de texto. Tamanho sugerido: 16px. O espaçamento entre linhas (line-height) deve ser de 150% (1.5) para maximizar a legibilidade em dispositivos móveis e desktop.</p>
+                        <p class="text-lg text-slate-700 leading-relaxed">A prioridade é a leitura rápida e confortável. Usamos até 2 fontes em toda a identidade visual para manter a coesão.</p>
+                        <h3 class="text-2xl font-semibold text-emerald-700 mt-6 mb-2">Fonte Destaques / Botões</h3>
+                        <p class="text-lg font-bold text-sky-500">CTA (Call to Action) em Maiúsculas.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 10. Aplicações da Marca -->
+            <section id="aplicacoes" class="p-8 sm:p-12 lg:p-16 bg-gradient-to-br from-slate-50 to-white">
+                <h2 class="text-4xl section-title pl-4 mb-8">10. Aplicações da Marca</h2>
+                <p class="text-xl text-slate-600 mb-8">Exemplos visuais de como a identidade visual deve ser aplicada nos principais pontos de contato do usuário com o site.</p>
+                
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="p-6 bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-100 modern-card">
+                        <h3 class="font-semibold text-lg mb-4 text-slate-800">Aplicação no Cabeçalho (Header)</h3>
+                        <img src="https://placehold.co/400x150/f1f5f9/1e293b?text=Header+com+Logo" alt="Logo aplicado no cabeçalho" class="w-full h-auto rounded-lg border border-slate-200 shadow-sm">
+                    </div>
+                    <div class="p-6 bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-100 modern-card">
+                        <h3 class="font-semibold text-lg mb-4 text-slate-800">Exemplo de Botões (Primário/Secundário)</h3>
+                        <div class="flex flex-wrap gap-4 mt-4">
+                            <button class="modern-button px-6 py-3 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-bold rounded-lg shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 relative overflow-hidden">Botão Primário</button>
+                            <button class="modern-button px-6 py-3 bg-gradient-to-r from-sky-500 to-sky-600 text-white font-bold rounded-lg shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 relative overflow-hidden">Botão Secundário</button>
+                            <button class="modern-button px-6 py-3 bg-white text-slate-800 border-2 border-slate-300 font-bold rounded-lg shadow-md hover:shadow-lg hover:border-slate-400 hover:scale-105 transition-all duration-300 relative overflow-hidden">Botão Neutro</button>
+                        </div>
+                    </div>
+                    <div class="md:col-span-2 p-6 bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-100 modern-card">
+                        <h3 class="font-semibold text-lg mb-4 text-slate-800">Uso em Dispositivos (Mobile Mockup)</h3>
+                        <img src="https://placehold.co/600x400/94a3b8/0f172a?text=Mobile+Mockup+do+Site" alt="Uso em dispositivos (celular/tablet/PC)" class="w-full md:w-1/2 mx-auto h-auto rounded-lg border border-slate-200 shadow-lg">
+                    </div>
+                </div>
+            </section>
+
+            <!-- 11. Proibições de Uso -->
+            <section id="proibicoes" class="p-8 sm:p-12 lg:p-16">
+                <h2 class="text-4xl section-title pl-4 mb-8">11. Proibições de Uso</h2>
+                <p class="text-xl text-slate-600 mb-8">Para manter a integridade visual da marca, as seguintes práticas são <strong>estritamente proibidas</strong>.</p>
+                
+                <div class="grid md:grid-cols-3 gap-6">
+                    <!-- Proibição 1: Esticar -->
+                    <div class="p-6 rounded-2xl shadow-xl bg-gradient-to-br from-red-50 to-red-100 border-2 border-red-300 transform hover:scale-105 transition-all duration-300">
+                        <div class="flex items-center justify-center h-24 mb-4 bg-white/70 backdrop-blur-sm rounded-xl border-2 border-red-400">
+                            <img src="https://placehold.co/150x40/ef4444/ffffff?text=X+Esticar" alt="Proibido Esticar o Logo" class="transform scale-y-150">
+                        </div>
+                        <p class="font-bold text-red-700 text-center flex items-center justify-center gap-2">
+                            <span class="text-2xl">❌</span> Esticar o logo
+                        </p>
+                    </div>
+                    <!-- Proibição 2: Mudar Cores -->
+                    <div class="p-6 rounded-2xl shadow-xl bg-gradient-to-br from-red-50 to-red-100 border-2 border-red-300 transform hover:scale-105 transition-all duration-300">
+                        <div class="flex items-center justify-center h-24 mb-4 bg-white/70 backdrop-blur-sm rounded-xl border-2 border-red-400">
+                            <img src="https://placehold.co/100x60/f97316/ffffff?text=X+Cores" alt="Proibido Mudar as Cores Originais" class="w-24 h-12">
+                        </div>
+                        <p class="font-bold text-red-700 text-center flex items-center justify-center gap-2">
+                            <span class="text-2xl">❌</span> Mudar as cores originais
+                        </p>
+                    </div>
+                    <!-- Proibição 3: Fundo Ruim -->
+                    <div class="p-6 rounded-2xl shadow-xl bg-gradient-to-br from-red-50 to-red-100 border-2 border-red-300 transform hover:scale-105 transition-all duration-300">
+                        <div class="flex items-center justify-center h-24 mb-4 rounded-xl border-2 border-red-400" style="background-color: #fef08a;">
+                            <img src="https://placehold.co/100x60/1e293b/ffffff?text=Logo" alt="Proibido Fundo que Prejudique a Leitura" class="w-24 h-12 opacity-50">
+                        </div>
+                        <p class="font-bold text-red-700 text-center flex items-center justify-center gap-2">
+                            <span class="text-2xl">❌</span> Fundo que prejudique a leitura
+                        </p>
+                    </div>
+                    <!-- Proibição 4: Sombra -->
+                    <div class="p-6 rounded-2xl shadow-xl bg-gradient-to-br from-red-50 to-red-100 border-2 border-red-300 transform hover:scale-105 transition-all duration-300">
+                        <div class="flex items-center justify-center h-24 mb-4 bg-white/70 backdrop-blur-sm rounded-xl border-2 border-red-400">
+                            <span class="text-2xl font-bold text-emerald-600 drop-shadow-lg">Sombra 💀</span>
+                        </div>
+                        <p class="font-bold text-red-700 text-center flex items-center justify-center gap-2">
+                            <span class="text-2xl">❌</span> Usar sombra exagerada
+                        </p>
+                    </div>
+                    <!-- Proibição 5: Filtros -->
+                    <div class="p-6 rounded-2xl shadow-xl bg-gradient-to-br from-red-50 to-red-100 border-2 border-red-300 transform hover:scale-105 transition-all duration-300">
+                        <div class="flex items-center justify-center h-24 mb-4 bg-white/70 backdrop-blur-sm rounded-xl border-2 border-red-400">
+                            <span class="text-2xl font-bold text-emerald-600 opacity-30">Filtro</span>
+                        </div>
+                        <p class="font-bold text-red-700 text-center flex items-center justify-center gap-2">
+                            <span class="text-2xl">❌</span> Aplicar filtros aleatórios
+                        </p>
+                    </div>
+                    <!-- Proibição 6: Tipografia -->
+                    <div class="p-6 rounded-2xl shadow-xl bg-gradient-to-br from-red-50 to-red-100 border-2 border-red-300 transform hover:scale-105 transition-all duration-300">
+                        <div class="flex items-center justify-center h-24 mb-4 bg-white/70 backdrop-blur-sm rounded-xl border-2 border-red-400 font-serif">
+                            <span class="text-2xl font-bold text-emerald-600">Fonte X</span>
+                        </div>
+                        <p class="font-bold text-red-700 text-center flex items-center justify-center gap-2">
+                            <span class="text-2xl">❌</span> Alterar a tipografia definida
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 12. Protótipo (Figma) ou Prints do Site Real -->
+            <section id="prototipo" class="p-8 sm:p-12 lg:p-16 bg-gradient-to-br from-slate-50 to-white">
+                <h2 class="text-4xl section-title pl-4 mb-8">12. Protótipo / Prints do Site Real (Obrigatório)</h2>
+                <p class="text-xl text-slate-600 mb-8">Demonstração da coerência entre o design proposto no manual e a interface construída no Figma ou já publicada. Este é o teste final de consistência.</p>
+                
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="p-6 bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-100 modern-card">
+                        <h3 class="font-semibold text-lg mb-4 text-slate-800">Página Inicial (Desktop)</h3>
+                        <img src="https://placehold.co/600x400/e2e8f0/1e293b?text=Print+da+Página+Inicial+Desktop" alt="Print do Protótipo Figma Página Inicial" class="w-full h-auto rounded-lg border border-slate-200 shadow-sm">
+                    </div>
+                    <div class="p-6 bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-100 modern-card">
+                        <h3 class="font-semibold text-lg mb-4 text-slate-800">Versão Mobile e Páginas Internas</h3>
+                        <img src="https://placehold.co/300x500/e2e8f0/1e293b?text=Print+da+Versão+Mobile" alt="Print da Versão Mobile" class="w-1/2 mx-auto h-auto rounded-lg border border-slate-200 shadow-sm">
+                    </div>
+                    <div class="md:col-span-2 p-6 bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-100 modern-card">
+                        <h3 class="font-semibold text-lg mb-4 text-slate-800">Elementos de UI (Cards, Menus e Botões Aplicados)</h3>
+                        <img src="https://placehold.co/600x200/e2e8f0/1e293b?text=Exemplos+de+Cards+e+Menus" alt="Exemplos de Cards e Menus" class="w-full h-auto rounded-lg border border-slate-200 shadow-sm">
+                    </div>
+                </div>
+            </section>
+
+            <!-- 13. Créditos do Grupo -->
+            <section id="creditos" class="p-8 sm:p-12 lg:p-16 bg-gradient-to-br from-slate-100 via-emerald-50 to-slate-100">
+                <h2 class="text-4xl section-title pl-4 mb-12">13. Créditos do Grupo</h2>
+                <div class="grid md:grid-cols-4 gap-6 text-center">
+                    <div class="bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-xl border border-slate-200 modern-card group">
+                        <div class="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-full flex items-center justify-center text-white text-2xl font-bold transform group-hover:rotate-12 transition-all duration-300">
+                            1
+                        </div>
+                        <p class="text-xl font-bold text-slate-800 mb-2">Nome Integrante 1</p>
+                        <p class="text-emerald-600 font-semibold">Função: Designer Líder</p>
+                    </div>
+                    <div class="bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-xl border border-slate-200 modern-card group">
+                        <div class="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-sky-400 to-sky-600 rounded-full flex items-center justify-center text-white text-2xl font-bold transform group-hover:rotate-12 transition-all duration-300">
+                            2
+                        </div>
+                        <p class="text-xl font-bold text-slate-800 mb-2">Nome Integrante 2</p>
+                        <p class="text-sky-600 font-semibold">Função: Desenvolvedor Front-end</p>
+                    </div>
+                    <div class="bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-xl border border-slate-200 modern-card group">
+                        <div class="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-violet-400 to-violet-600 rounded-full flex items-center justify-center text-white text-2xl font-bold transform group-hover:rotate-12 transition-all duration-300">
+                            3
+                        </div>
+                        <p class="text-xl font-bold text-slate-800 mb-2">Nome Integrante 3</p>
+                        <p class="text-violet-600 font-semibold">Função: Editor de Imagens / Documentação</p>
+                    </div>
+                    <div class="bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-xl border border-slate-200 modern-card group">
+                        <div class="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-pink-400 to-pink-600 rounded-full flex items-center justify-center text-white text-2xl font-bold transform group-hover:rotate-12 transition-all duration-300">
+                            4
+                        </div>
+                        <p class="text-xl font-bold text-slate-800 mb-2">Nome Integrante 4</p>
+                        <p class="text-pink-600 font-semibold">Função: Revisão e Conteúdo</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer class="p-8 text-center text-sm text-slate-500 border-t border-slate-300 bg-gradient-to-r from-slate-100 to-white mt-12">
+                <p class="font-medium">Manual Oficial de Identidade Visual | <span class="text-emerald-600 font-bold">Design Digital - DSM - Prof Érick</span> &copy; 2025</p>
+            </footer>
+
+        </div>
+    </main>
+
+    <script>
+        function copyHex(element) {
+            const hexCode = element.textContent;
+            navigator.clipboard.writeText(hexCode).then(() => {
+                const message = document.getElementById('copy-message');
+                message.textContent = `Copiado! ${hexCode}`;
+                message.classList.remove('opacity-0');
+                message.classList.add('opacity-100');
+                setTimeout(() => {
+                    message.classList.remove('opacity-100');
+                    message.classList.add('opacity-0');
+                }, 1500);
+            }).catch(err => {
+                console.error('Falha ao copiar:', err);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const sidebarLinks = document.querySelectorAll('.sidebar-link');
+            const mainContent = document.querySelector('main');
+            const sections = document.querySelectorAll('section[id]');
+
+            // 1. Smooth Scroll Navigation
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 20, 
+                            behavior: 'smooth'
+                        });
+                        // Update active state immediately (optional)
+                        sidebarLinks.forEach(l => l.classList.remove('active'));
+                        this.classList.add('active');
+                    }
+                });
+            });
+
+            // 2. Intersection Observer for Active State
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px 0px -75% 0px', // Adjust active link when section starts to enter view
+                threshold: 0
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Remove active class from all links
+                        sidebarLinks.forEach(link => link.classList.remove('active'));
+                        
+                        // Add active class to the corresponding link
+                        const targetId = `#${entry.target.id}`;
+                        const correspondingLink = document.querySelector(`.sidebar-link[href="${targetId}"]`);
+                        if (correspondingLink) {
+                            correspondingLink.classList.add('active');
+                        }
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+        });
+    </script>
+</body>
+</html>
